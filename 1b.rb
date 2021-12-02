@@ -2,7 +2,7 @@ incs = 0
 buff = []
 
 File
-  .open("1a.txt")
+  .open("1.txt")
   .each_line do |line|
     buff << line.to_i
     next unless buff.count == 4
