@@ -5,7 +5,7 @@ def binfind(lines:, f:, cur: 0)
 end
 
 lines = File.readlines("3.txt", chomp: true)
-o2gen = binfind(lines: lines, f: ->(o, z) { o&.count >= z&.count ? o : z })
-co2scrub = binfind(lines: lines, f: ->(o, z) { o&.count < z&.count ? o : z })
+o2gen = binfind(lines: lines, f: ->(o, z) { o.count >= z.count ? o : z })
+co2scrub = binfind(lines: lines, f: ->(o, z) { o.count < z.count ? o : z })
 
 p o2gen.to_i(2) * co2scrub.to_i(2)
