@@ -1,7 +1,7 @@
 def binfind(lines:, f:, cur: 0)
   return lines[0] if lines.count == 1
   ones, zeroes = lines.partition { |l| l[cur] == "1" }
-  binfind(f: f, cur: cur + 1, lines: f.call(ones, zeroes))
+  binfind(lines: f.call(ones, zeroes), f: f, cur: cur + 1)
 end
 
 lines = File.readlines("3.txt", chomp: true)
