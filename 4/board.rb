@@ -22,29 +22,3 @@ class Board
       .sum * @last_called
   end
 end
-
-nums = []
-boards = []
-
-File.open("4.txt") do |file|
-  nums = file.gets.split(",").map(&:to_i)
-  rows = []
-
-  while line = file.gets&.strip
-    next if line.length == 0
-
-    if (rows << line).count == 5
-      boards << Board.new(rows)
-      rows = []
-    end
-  end
-end
-
-nums.each do |num|
-  boards.each { |b| b.call(num) }
-
-  if winner = boards.find(&:won?)
-    p winner.score
-    break
-  end
-end
