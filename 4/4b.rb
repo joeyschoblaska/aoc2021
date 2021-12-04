@@ -10,6 +10,6 @@ nums.each do |num|
     p boards[0].score
     break
   else
-    boards.select! { |b| !b.won? }
+    boards.reject!(&:won?)
   end
 end
