@@ -6,7 +6,7 @@ File.foreach("5.txt", chomp: true) do |line|
   next unless x1 == x2 || y1 == y2
 
   loc = [x1, y1]
-  dir = [[[x2 - x1, -1].max, 1].min, [[y2 - y1, -1].max, 1].min]
+  dir = [(x2 - x1).clamp(-1, 1), (y2 - y1).clamp(-1, 1)]
 
   loop do
     coords[loc] += 1
