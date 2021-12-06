@@ -1,6 +1,5 @@
-feesh = Array.new(9, 0)
-
-File.read("6/6.txt").split(",").each { |f| feesh[f.to_i] += 1 }
+input = File.read("6/6.txt")
+feesh = (0..9).map { |i| input.count(i.to_s) }
 
 256.times do
   feesh[8] = feesh.shift
