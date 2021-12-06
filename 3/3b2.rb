@@ -16,7 +16,7 @@ def binfind(lines:, ifequal:, maxby:, cur: 0)
   )
 end
 
-lines = File.readlines("3.txt", chomp: true)
+lines = File.readlines("3/3.txt", chomp: true)
 o2gen = binfind(lines: lines, ifequal: "1", maxby: ->(n) { n.count })
 co2scrub = binfind(lines: lines, ifequal: "0", maxby: ->(n) { -n.count })
 

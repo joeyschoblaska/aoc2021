@@ -1,7 +1,7 @@
 pos = [0, 0]
 aim = 0
 
-File.foreach("2.txt") do |line|
+File.foreach("2/2.txt") do |line|
   dir, x = line.split(" ")
 
   case dir

@@ -1,6 +1,6 @@
 counts = nil
 
-File.foreach("3.txt", chomp: true) do |line|
+File.foreach("3/3.txt", chomp: true) do |line|
   bits = line.split(//).map(&:to_i)
   counts ||= Array.new(bits.count, 0)
   bits.each_with_index { |b, i| counts[i] += b == 1 ? 1 : -1 }
