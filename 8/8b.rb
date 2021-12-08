@@ -25,7 +25,7 @@ sum =
     config =
       configs.find do |config|  # find the config
         signals.all? do |signal|  # where all the signals
-          MAPS.any? { |map| map == signal_to_map(signal, config) } # could match at least one map
+          MAPS.index(signal_to_map(signal, config)) # have a valid map
         end
       end
 
