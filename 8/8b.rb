@@ -29,13 +29,8 @@ sum =
         end
       end
 
-    signals
-      .last(4)
-      .map do |signal|
-        MAPS.index(signal_to_map(signal, config)) # value == index of matching map using correct config
-      end
-      .join
-      .to_i
+    # value == index of matching map using correct config
+    signals.last(4).map { |s| MAPS.index(signal_to_map(s, config)) }.join.to_i
   end
 
 p sum
