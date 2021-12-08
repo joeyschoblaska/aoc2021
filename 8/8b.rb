@@ -14,21 +14,25 @@ MAPS = [
 lines = File.readlines("8/8.txt", chomp: true)
 configs = %w[a b c d e f g].permutation.to_a
 
+def signal_to_map(signal, config)
+  config.map { |c| signal.include?(c) ? 1 : 0 }
+end
+
 sum =
   lines.sum do |line|
     signals = line.scan(/[a-g]+/)
 
     config =
-      configs.find do |conf|  # find the config
+      configs.find do |config|  # find the config
         signals.all? do |signal|  # where all the signals
-          MAPS.any? { |map| map == conf.map { |c| signal.include?(c) ? 1 : 0 } } # could match at least one map
+          MAPS.any? { |map| map == signal_to_map(signal, config) } # could match at least one map
         end
       end
 
     signals
       .last(4)
       .map do |signal|
-        MAPS.index(config.map { |c| signal.include?(c) ? 1 : 0 }) # value == index of matching map using correct config
+        MAPS.index(signal_to_map(signal, config)) # value == index of matching map using correct config
       end
       .join
       .to_i
