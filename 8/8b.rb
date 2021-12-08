@@ -15,7 +15,7 @@ lines = File.readlines("8/8.txt", chomp: true)
 configs = %w[a b c d e f g].permutation.to_a
 
 def signal_to_map(signal, config)
-  config.map { |c| signal.include?(c) ? 1 : 0 }
+  config.map { |c| signal.include?(c) ? 1 : 0 } # (acf, [a b c d e f g]) = [1 0 1 0 0 1 0]
 end
 
 sum =
