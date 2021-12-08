@@ -5,5 +5,4 @@ def burn(dist)
 end
 
 🦀 = File.read("7/7.txt").split(",").map(&:to_i)
-average = 🦀.sum / 🦀.count
-p 🦀.sum { |c| burn((c - average).abs) }
+p 🦀.sum { |c| burn((c - 🦀.sum / 🦀.count).abs) }
