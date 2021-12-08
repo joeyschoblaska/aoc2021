@@ -19,20 +19,16 @@ sum =
     signals = line.scan(/[a-g]+/)
 
     config =
-      configs.find do |conf|
-        signals.all? do |signal|
-          MAPS.any? { |map| map == conf.map { |c| signal.include?(c) ? 1 : 0 } }
+      configs.find do |conf|  # find the config
+        signals.all? do |signal|  # where all the signals
+          MAPS.any? { |map| map == conf.map { |c| signal.include?(c) ? 1 : 0 } } # could match at least one map
         end
       end
 
-    line
-      .split(" | ")
-      .last
-      .scan(/[a-g]+/)
+    signals
+      .last(4)
       .map do |signal|
-        MAPS.index do |map|
-          map == config.map { |c| signal.include?(c) ? 1 : 0 }
-        end
+        MAPS.index(config.map { |c| signal.include?(c) ? 1 : 0 }) # value == index of matching map using correct config
       end
       .join
       .to_i
