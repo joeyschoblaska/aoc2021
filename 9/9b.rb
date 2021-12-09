@@ -1,5 +1,3 @@
-require "pry"
-
 def neighbors(r, c, rows)
   [
     r > 0 ? [r - 1, c] : nil,
