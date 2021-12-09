@@ -16,8 +16,8 @@ basins = []
 
 rows.each_with_index do |row, r|
   row.each_with_index do |e, c|
-    next if basins.any? { |b| b.include? [r, c] }
     next if e == 9
+    next if basins.any? { |b| b.include? [r, c] }
 
     to_check = [[r, c]]
     checked = []
