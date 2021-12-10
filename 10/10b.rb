@@ -32,4 +32,4 @@ File.foreach("10/10.txt", chomp: true) do |line|
   scores << score
 end
 
-p scores.sort[scores.count / 2]
+p scores.median
