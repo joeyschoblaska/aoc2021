@@ -12,7 +12,7 @@ File.foreach("10/10.txt", chomp: true) do |line|
   line
     .split(//)
     .each do |ch|
-      if brackets.index(ch) % 2 == 0
+      if brackets.index(ch).even?
         stack << ch
       elsif brackets.before(ch) == stack.last
         stack.pop
