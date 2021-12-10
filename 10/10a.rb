@@ -1,5 +1,5 @@
 points = { ")" => 3, "]" => 57, "}" => 1197, ">" => 25_137 }
-brackets = ["(", ")", "{", "}", "<", ">", "[", "]"]
+brackets = "(){}<>[]".split(//)
 score = 0
 
 File.foreach("10/10.txt", chomp: true) do |line|
