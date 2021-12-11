@@ -1,5 +1,4 @@
 @octos = {}
-flashes = 0
 
 File
   .readlines("11/input.txt", chomp: true)
