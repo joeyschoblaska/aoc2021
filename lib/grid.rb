@@ -57,6 +57,10 @@ class Grid
     ].compact.each { |x, y| yield [[x, y], self[x, y]] }
   end
 
+  def neighbors(x, y, diags: true)
+    enum_for(:each_neighbor, x, y, diags: diags)
+  end
+
   def vals
     (0..max_x).map { |x| (0..max_y).map { |y| self[x, y] } }.flatten
   end

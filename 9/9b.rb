@@ -1,40 +1,31 @@
-def neighbors(r, c, rows)
-  [
-    r > 0 ? [r - 1, c] : nil,
-    r < rows.length - 1 ? [r + 1, c] : nil,
-    c > 0 ? [r, c - 1] : nil,
-    c < rows[r].length - 1 ? [r, c + 1] : nil
-  ].compact
-end
+require "./lib/grid"
 
-rows =
-  File.readlines("9/9.txt", chomp: true).map { |r| r.split(//).map(&:to_i) }
-
+grid = Grid.new
 basins = []
 
-rows.each_with_index do |row, r|
-  row.each_with_index do |e, c|
-    next if e == 9
-    next if basins.any? { |b| b.include? [r, c] }
+File.foreach("9/9.txt", chomp: true).map { |r| grid << r.chars.map(&:to_i) }
 
-    to_check = [[r, c]]
-    checked = []
+grid.each do |(x, y), v|
+  next if v == 9
+  next if basins.any? { |b| b.include? [x, y] }
 
-    until to_check.empty?
-      checking = to_check.pop
+  to_check = [[x, y]]
+  checked = []
 
-      neighbors(checking[0], checking[1], rows).each do |n|
-        next if rows[n[0]][n[1]] == 9
-        next if checked.include?(n)
-        next if to_check.include?(n)
-        to_check << n
-      end
+  until to_check.empty?
+    checking = to_check.pop
 
-      checked << checking
+    grid.each_neighbor(*checking, diags: false) do |(nx, ny), nv|
+      next if nv == 9
+      next if checked.include?([nx, ny])
+      next if to_check.include?([nx, ny])
+      to_check << [nx, ny]
     end
 
-    basins << checked
+    checked << checking
   end
+
+  basins << checked
 end
 
 p basins.map(&:count).sort.last(3).inject(:*)

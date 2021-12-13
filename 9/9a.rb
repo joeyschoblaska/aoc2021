@@ -1,19 +1,12 @@
-rows =
-  File.readlines("9/9.txt", chomp: true).map { |r| r.split(//).map(&:to_i) }
+require "./lib/grid"
 
+grid = Grid.new
 low_points = []
 
-rows.each_with_index do |row, r|
-  row.each_with_index do |e, c|
-    neighbors = [
-      r > 0 ? rows[r - 1][c] : nil,
-      r < rows.length - 1 ? rows[r + 1][c] : nil,
-      c > 0 ? rows[r][c - 1] : nil,
-      c < row.length - 1 ? rows[r][c + 1] : nil
-    ].compact
+File.foreach("9/9.txt", chomp: true).map { |r| grid << r.chars.map(&:to_i) }
 
-    low_points << e if neighbors.compact.all? { |n| n > e }
-  end
+grid.each do |(x, y), v|
+  low_points << v if grid.neighbors(x, y, diags: false).all? { |_, nv| nv > v }
 end
 
 p low_points.sum { |p| p + 1 }
