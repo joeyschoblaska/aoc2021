@@ -25,19 +25,6 @@ class Grid
     (0..max_x).each { |x| (0..max_y).each { |y| yield [[x, y], self[x, y]] } }
   end
 
-  def max_x
-    @rows.map { |r| r&.count || 0 }.max - 1
-  end
-
-  def max_y
-    @rows.count - 1
-  end
-
-  def trim!
-    @rows.pop until @rows[-1] && @rows[-1].any?
-    @rows.each { |row| row.pop until row[-1] }
-  end
-
   def inspect
     (0..max_x)
       .map { |x| (0..max_y).map { |y| self[x, y].inspect }.join(", ") }
@@ -54,5 +41,15 @@ class Grid
 
   def each_col
     (0..max_x).each { |x| yield (0..max_y).map { |y| self[x, y] } }
+  end
+
+  private
+
+  def max_x
+    @rows.map { |r| r&.count || 0 }.max - 1
+  end
+
+  def max_y
+    @rows.count - 1
   end
 end
