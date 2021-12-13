@@ -1,34 +1,29 @@
-@🐙 = {}
+require "./lib/grid"
 
-File
-  .readlines("11/input.txt", chomp: true)
-  .each_with_index do |row, y|
-    row.chars.each_with_index { |c, x| @🐙[[x, y]] = c.to_i }
-  end
+@🐙 = Grid.new
 
-def neighbors(x, y)
-  [x - 1, x, x + 1].map { |xx| [y - 1, y, y + 1].map { |yy| [xx, yy] } }
-    .flatten(1)
-    .select { |xy| @🐙[xy] && xy != [x, y] }
+File.foreach("11/input.txt", chomp: true) do |line|
+  @🐙 << line.chars.map(&:to_i)
 end
 
 def flash(x, y)
-  @🐙[[x, y]] += 1
+  @🐙[x, y] = 99
 
-  neighbors(x, y).each do |xy|
-    @🐙[xy] += 1 unless @🐙[xy] == 10
-    flash(*xy) if @🐙[xy] == 10
+  @🐙.each_neighbor(x, y) do |(nx, ny), val|
+    next if val == 99
+    @🐙[nx, ny] += 1
+    flash(nx, ny) if val >= 9
   end
 end
 
 1.step do |i|
-  @🐙.each { |k, v| @🐙[k] += 1 }
-  @🐙.each { |k, v| flash(*k) if v == 10 }
+  @🐙.each { |(x, y), v| @🐙[x, y] += 1 }
+  @🐙.each { |(x, y), v| flash(x, y) if v == 10 }
 
-  if @🐙.select { |k, v| v > 9 }.count == 100
+  if @🐙.vals.all? { |v| v > 9 }
     puts "everybody flash your hands! #{i.to_s}"
     break
   end
 
-  @🐙.each { |k, v| @🐙[k] = 0 if v > 9 }
+  @🐙.each { |(x, y), v| @🐙[x, y] = 0 if v > 9 }
 end

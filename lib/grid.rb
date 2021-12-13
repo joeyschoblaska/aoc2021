@@ -26,8 +26,9 @@ class Grid
   end
 
   def inspect
-    (0..max_x)
-      .map { |x| (0..max_y).map { |y| self[x, y].inspect }.join(", ") }
+    return "[]" if @rows.empty?
+    (0..max_y)
+      .map { |y| (0..max_x).map { |x| self[x, y].inspect }.join(", ") }
       .join("\n")
   end
 
@@ -41,6 +42,23 @@ class Grid
 
   def each_col
     (0..max_x).each { |x| yield (0..max_y).map { |y| self[x, y] } }
+  end
+
+  def each_neighbor(x, y)
+    [
+      x > 0 && y > 0 ? [x - 1, y - 1] : nil,
+      y > 0 ? [x, y - 1] : nil,
+      x < max_x && y > 0 ? [x + 1, y - 1] : nil,
+      x > 0 ? [x - 1, y] : nil,
+      x < max_x ? [x + 1, y] : nil,
+      x > 0 && y < max_y ? [x - 1, y + 1] : nil,
+      y < max_y ? [x, y + 1] : nil,
+      x < max_x && y < max_y ? [x + 1, y + 1] : nil
+    ].compact.each { |x, y| yield [[x, y], self[x, y]] }
+  end
+
+  def vals
+    (0..max_x).map { |x| (0..max_y).map { |y| self[x, y] } }.flatten
   end
 
   private
