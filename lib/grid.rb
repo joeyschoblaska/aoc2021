@@ -62,7 +62,7 @@ class Grid
   end
 
   def vals
-    (0..max_x).map { |x| (0..max_y).map { |y| self[x, y] } }.flatten
+    enum_for(:each).map { |_, v| v }
   end
 
   private
