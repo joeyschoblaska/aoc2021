@@ -1,16 +1,12 @@
-chain = ""
+chain = nil
 rules = {}
 counts = Hash.new(0)
 steps = 40
 
 File.foreach("14/input.txt", chomp: true) do |line|
-  case line
-  when /\w{4}/
-    chain = line
-  when /\w\w -> \w/
-    k, v = line.split(" -> ")
-    rules[k] = { char: v }
-  end
+  chain ||= line
+  k, v = line.split(" -> ")
+  rules[k] = { char: v } if k && v
 end
 
 rules.each do |k, v|
