@@ -14,24 +14,18 @@ File.foreach("14/input.txt", chomp: true) do |line|
 end
 
 rules.each do |k, v|
-  rules[k][:counts] = Array.new(steps + 1, 0)
-  rules[k][:counts][0] = chain.scan(k).count
-  rules[k][:creates] =
-    "#{k[0]}#{v[:char]}#{k[1]}"
-      .chars
-      .each_cons(2)
-      .map { |pair| rules.key?(pair.join) ? pair.join : nil }
-      .compact
+  rules[k][:counts] = [chain.scan(k).count] + Array.new(steps, 0)
+  rules[k][:becomes] =
+    ["#{k[0]}#{v[:char]}", "#{v[:char]}#{k[1]}"].select { |p| rules.key?(p) }
 end
 
 steps.times do |i|
-  rules.each do |k, v|
-    v[:creates].each { |c| rules[c][:counts][i + 1] += v[:counts][i] }
+  rules.each do |_, rule|
+    rule[:becomes].each { |n| rules[n][:counts][i + 1] += rule[:counts][i] }
   end
 end
 
 rules.each { |k, v| counts[k[0]] += v[:counts][-1] }
-
 counts[chain[-1]] += 1
-counts = counts.to_a.sort_by { |k, v| v }
-p counts[-1][1] - counts[0][1]
+
+p counts.values.max - counts.values.min
