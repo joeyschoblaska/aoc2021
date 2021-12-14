@@ -10,9 +10,8 @@ File.foreach("14/input.txt", chomp: true) do |line|
 end
 
 rules.each do |k, v|
-  rules[k][:counts] = [chain.scan(k).count] + Array.new(steps, 0)
-  rules[k][:becomes] =
-    ["#{k[0]}#{v[:char]}", "#{v[:char]}#{k[1]}"].select { |p| rules.key?(p) }
+  v[:counts] = [chain.scan(k).count] + Array.new(steps, 0)
+  v[:becomes] = [k[0] + v[:char], v[:char] + k[1]].select { |p| rules.key?(p) }
 end
 
 steps.times do |i|
