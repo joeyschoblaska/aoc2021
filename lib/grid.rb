@@ -1,8 +1,8 @@
 class Grid
   include Enumerable
 
-  def initialize()
-    @rows = []
+  def initialize(rows = [])
+    @rows = rows
   end
 
   def []=(x, y, val)
@@ -64,8 +64,6 @@ class Grid
   def vals
     enum_for(:each).map { |_, v| v }
   end
-
-  private
 
   def max_x
     @rows.map { |r| r&.count || 0 }.max - 1
