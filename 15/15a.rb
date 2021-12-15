@@ -21,7 +21,4 @@ until visited.include?(dest)
   visited << coords
 end
 
-require "pry"
-binding.pry
-
 p distances[dest]
