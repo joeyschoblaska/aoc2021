@@ -13,21 +13,13 @@ lines += 4.times.map { |i| lines.map { |line| inc(line, i + 1) } }.flatten(1)
 
 map = Grid.new(lines)
 
-# dist of a naive path crossing from 0, 0, through a point, to dest
-def naive_dist(through, map, dest)
+# dist of a naive path to dest
+def naive_dist(x, y, map, dest)
   dist = 0
-  pos = [0, 0]
 
-  # origin to `through`
-  until pos == through
-    pos[0] += 1 and dist += map[*pos] if pos[0] < through[0]
-    pos[1] += 1 and dist += map[*pos] if pos[1] < through[1]
-  end
-
-  # `through` to dest
-  until pos == dest
-    pos[0] += 1 and dist += map[*pos] if pos[0] < dest[0]
-    pos[1] += 1 and dist += map[*pos] if pos[1] < dest[1]
+  until [x, y] == dest
+    x += 1 and dist += map[x, y] if x < dest[0]
+    y += 1 and dist += map[x, y] if y < dest[1]
   end
 
   dist
@@ -53,7 +45,7 @@ dest = [map.max_x, map.max_y]
 found = { [0, 0] => 0 }
 
 # the current best guess of dist of shortest path from start to dest through k
-guesses = { [0, 0] => naive_dist([0, 0], map, dest) }
+guesses = { [0, 0] => naive_dist(0, 0, map, dest) }
 
 while open.any?
   current = open.min_by { |o| found[o] }
@@ -68,7 +60,7 @@ while open.any?
     if found[nxy].nil? || tentative_found < found[nxy]
       came_from[nxy] = current
       found[nxy] = tentative_found
-      guesses[nxy] = tentative_found + naive_dist(nxy, map, dest)
+      guesses[nxy] = tentative_found + naive_dist(*nxy, map, dest)
       open << nxy
     end
   end
