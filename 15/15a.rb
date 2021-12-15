@@ -1,24 +1,21 @@
 require "set"
 require "./lib/grid"
 
-map = Grid.new
-distances = { [0, 0] => 0 }
+dists = { [0, 0] => 0 }
 visited = Set.new
-
-File.foreach("15/input.txt", chomp: true) { |l| map << l.chars.map(&:to_i) }
-
+lines = File.readlines("15/input.txt")
+map = Grid.new(lines.map { |l| l.strip.chars.map(&:to_i) })
 dest = [map.max_x, map.max_y]
 
 until visited.include?(dest)
-  coords, dist =
-    distances.select { |k, _| !visited.include?(k) }.min_by { |_, v| v }
+  pos, dist = dists.select { |k, _| !visited.include?(k) }.min_by { |_, v| v }
 
-  map.each_neighbor(*coords, diags: false) do |nxy, nv|
+  map.each_neighbor(*pos, diags: false) do |nxy, nv|
     newdist = dist + nv
-    distances[nxy] = [distances[nxy] || Float::INFINITY, newdist].min
+    dists[nxy] = [dists[nxy] || Float::INFINITY, newdist].min
   end
 
-  visited << coords
+  visited << pos
 end
 
-p distances[dest]
+p dists[dest]
