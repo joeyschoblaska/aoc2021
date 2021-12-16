@@ -46,11 +46,11 @@ def parse_subpackets_by_num(str, num)
   num.times.map { parse(str) }
 end
 
-def vsum(subpackets: [], version:, **rest)
+def vsum(subpackets: [], version:, **_)
   subpackets.empty? ? version : version + subpackets.sum { |sub| vsum(**sub) }
 end
 
-def operate(type_id:, value: nil, subpackets: [], **rest)
+def operate(type_id:, value: nil, subpackets: [], **_)
   case type_id
   when 0
     subpackets.sum { |p| operate(**p) }
