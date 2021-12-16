@@ -46,37 +46,33 @@ def parse_subpackets_by_num(str, num)
   num.times.map { parse(str) }
 end
 
-def vsum(packet)
-  if packet[:subpackets].empty?
-    packet[:version]
-  else
-    packet[:version] + packet[:subpackets].sum { |sub| vsum(sub) }
-  end
+def vsum(subpackets: [], version:, **rest)
+  subpackets.empty? ? version : version + subpackets.sum { |sub| vsum(**sub) }
 end
 
-def operate(packet)
-  case packet[:type_id]
+def operate(type_id:, value: nil, subpackets: [], **rest)
+  case type_id
   when 0
-    packet[:subpackets].sum { |p| operate(p) }
+    subpackets.sum { |p| operate(**p) }
   when 1
-    packet[:subpackets].reduce(1) { |acc, p| acc *= operate(p) }
+    subpackets.reduce(1) { |acc, p| acc *= operate(**p) }
   when 2
-    packet[:subpackets].map { |p| operate(p) }.min
+    subpackets.map { |p| operate(**p) }.min
   when 3
-    packet[:subpackets].map { |p| operate(p) }.max
+    subpackets.map { |p| operate(**p) }.max
   when 4
-    packet[:value]
+    value
   when 5
-    operate(packet[:subpackets][0]) > operate(packet[:subpackets][1]) ? 1 : 0
+    operate(**subpackets[0]) > operate(**subpackets[1]) ? 1 : 0
   when 6
-    operate(packet[:subpackets][0]) < operate(packet[:subpackets][1]) ? 1 : 0
+    operate(**subpackets[0]) < operate(**subpackets[1]) ? 1 : 0
   when 7
-    operate(packet[:subpackets][0]) == operate(packet[:subpackets][1]) ? 1 : 0
+    operate(**subpackets[0]) == operate(**subpackets[1]) ? 1 : 0
   end
 end
 
 raw = File.read("16/input.txt").strip
 packet = parse(raw, hex: true)
 
-p [:vsum, vsum(packet)]
-p [:operate, operate(packet)]
+p [:vsum, vsum(**packet)]
+p [:operate, operate(**packet)]
