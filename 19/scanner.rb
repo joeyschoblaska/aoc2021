@@ -29,9 +29,8 @@ class Scanner
     @pos = [x, y, z]
   end
 
-  def to_s
-    "up: #{@up}, rot: #{@rot}\n" +
-      beacons.map { |b| "#{b.x},#{b.y},#{b.z}\n" }.join
+  def scan_beacons
+    @beacons.each { |b| b.scan(@up, @rot, @pos) }
   end
 
   def fit_to(coords)
@@ -61,9 +60,8 @@ class Scanner
     (x - xo).abs + (y - yo).abs + (z - zo).abs
   end
 
-  private
-
-  def scan_beacons
-    @beacons.each { |b| b.scan(@up, @rot, @pos) }
+  def to_s
+    "up: #{@up}, rot: #{@rot}\n" +
+      beacons.map { |b| "#{b.x},#{b.y},#{b.z}\n" }.join
   end
 end
