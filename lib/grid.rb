@@ -61,7 +61,7 @@ class Grid
     enum_for(:each_neighbor, x, y, diags: diags)
   end
 
-  def vals
+  def values
     enum_for(:each).map { |_, v| v }
   end
 

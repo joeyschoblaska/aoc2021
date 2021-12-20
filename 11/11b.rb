@@ -20,7 +20,7 @@ end
   @🐙.each { |(x, y), v| @🐙[x, y] += 1 }
   @🐙.each { |(x, y), v| flash(x, y) if v == 10 }
 
-  if @🐙.vals.all? { |v| v > 9 }
+  if @🐙.values.all? { |v| v > 9 }
     puts "everybody flash your hands! #{i.to_s}"
     break
   end
