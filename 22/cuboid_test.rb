@@ -12,6 +12,7 @@ class CuboidTest < Test::Unit::TestCase
     @same = Cuboid.new(0..3, 0..3, 0..3)
     @partial_full_overlap = Cuboid.new(1..3, 0..3, 0..3)
     @slices = Cuboid.new(1..2, -1..4, -1..4)
+    @corners = Cuboid.new(2..4, 2..4, 2..4)
   end
 
   def test_intersects_poking
@@ -52,6 +53,11 @@ class CuboidTest < Test::Unit::TestCase
   def test_intersects_slices
     assert_true(@cuboid.intersects?(@slices))
     assert_true(@slices.intersects?(@cuboid))
+  end
+
+  def test_intersects_corners
+    assert_true(@cuboid.intersects?(@corners))
+    assert_true(@corners.intersects?(@cuboid))
   end
 
   def test_subtract_poking
@@ -99,5 +105,11 @@ class CuboidTest < Test::Unit::TestCase
     remaining = @cuboid.subtract(@slices)
     assert_equal(2, remaining.count)
     assert_equal(18, remaining.sum(&:volume))
+  end
+
+  def test_subtract_corners
+    remaining = @cuboid.subtract(@corners)
+    assert_equal(7, remaining.count)
+    assert_equal(26, remaining.sum(&:volume))
   end
 end

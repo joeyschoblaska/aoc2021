@@ -18,16 +18,28 @@ instructions =
 cuboids = []
 
 instructions.each do |onoff, xrange, yrange, zrange|
-  cuboid = Cuboid.new(xrange, yrange, zrange)
-  intersects, cuboids = cuboids.partition { |c| c.intersects?(cuboid) }
+  new_cuboids = [
+    Cuboid.new(
+      (xrange.first..xrange.last + 1), # +1 to account for the fact that the ranges
+      (yrange.first..yrange.last + 1), # don't describe the bounds of the box itself,
+      (zrange.first..zrange.last + 1) #  but the centers of the cubes the box contains
+    )
+  ]
 
-  # maybe instead of entering this loop, I need to first split the cuboid along
-  # each intersection, and then resolve them as groups (intersecting cuboid and
-  # fragments of cuboid)
-  intersects.each do |intersect|
-    # add / subtract intersects and cuboid
-    # add resulting cuboids back into set
-  end
+  intersects, cuboids = cuboids.partition { |c| c.intersects?(new_cuboids[0]) }
+
+  intersects =
+    intersects.map do |intersect|
+      if onoff == :on
+        new_cuboids = new_cuboids.map { |c| c.subtract(intersect) }.flatten
+        intersect
+      else
+        intersect.subtract(new_cuboids[0])
+      end
+    end.flatten
+
+  cuboids += new_cuboids if onoff == :on
+  cuboids += intersects
 end
 
 p cuboids.sum(&:volume)
