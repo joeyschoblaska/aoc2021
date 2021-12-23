@@ -53,6 +53,7 @@ end
 
 def legal_moves_from_to(board, from, to)
   to.map do |to|
+    next if from == to
     path = find_path(board, from, to)
     next unless path
     [from, to, (path.count - 1) * @energies[board[from]]]
@@ -60,26 +61,30 @@ def legal_moves_from_to(board, from, to)
 end
 
 def legal_moves(board)
-  board
-    .each_with_index
-    .map do |piece, from|
-      next unless piece
+  moves =
+    board
+      .each_with_index
+      .map do |piece, from|
+        next unless piece
 
-      goal_squares = @goal.each_index.select { |i| @goal[i] == piece }
+        a, b = @goal.each_index.select { |i| @goal[i] == piece }.sort
+        legal_goals = []
+        legal_goals << a if board[a].nil? && board[b] == piece
+        legal_goals << b if board[a].nil? && board[b].nil?
 
-      if goal_squares.include?(from)
-        min, max = goal_squares
-        next if from == max || board[max] == @goal[max]
+        if from > 10
+          # in a room
+          legal_moves_from_to(board, from, [0, 1, 3, 5, 7, 9, 10] + legal_goals)
+        else
+          # in the hallway
+          [legal_moves_from_to(board, from, legal_goals).max_by { |e| e[2] }]
+        end
       end
+      .flatten(1)
+      .compact
 
-      if from > 10
-        legal_moves_from_to(board, from, [0, 1, 3, 5, 7, 9, 10] + goal_squares) # in a room
-      else
-        [legal_moves_from_to(board, from, goal_squares).max_by { |e| e[2] }]
-      end
-    end
-    .flatten(1)
-    .compact
+  goal_move = moves.find { |m| m[1] > 10 }
+  goal_move ? [goal_move] : moves
 end
 
 def perform_move(board, from, to)
@@ -105,7 +110,7 @@ legal_moves(initial).each do |from, to, cost|
 end
 
 loop do
-  checking = candidates.sort_by { |c| costs[c] }[0, 10_000]
+  checking = candidates.sort_by { |c| costs[c] }[0, 1000]
 
   checking.each do |candidate|
     candidates.delete(candidate)
@@ -124,6 +129,7 @@ loop do
   end
 
   break if costs[@goal] && costs[@goal] < costs[checking[0]]
+  raise "ran out of candidates" if candidates.empty?
 end
 
 puts "result: #{costs[@goal]}"
