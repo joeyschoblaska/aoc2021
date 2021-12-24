@@ -33,7 +33,6 @@ end
 def legal_moves_from_to(board, from, to)
   to.map do |to|
     next if from == to
-    next unless board[to].nil?
     path = find_path(board, from, to)
     next unless path
     [from, to, (path.count - 1) * @energies[board[from]]]
@@ -54,21 +53,25 @@ end
 
 def solve(initial)
   costs = {}
+  moves = {}
   candidates = Set.new
 
   legal_moves(initial).each do |from, to, cost|
     result = perform_move(initial, from, to)
     candidates << result
     costs[result] = cost
+    moves[result] = [[from, to]]
   end
 
   loop do
     checking = candidates.sort_by { |c| costs[c] }[0, 1_000]
 
+    break if costs[@goal] && costs[@goal] < costs[checking[0]]
+
     checking.each do |candidate|
       candidates.delete(candidate)
 
-      p costs[candidate]
+      # p costs[candidate]
 
       legal_moves(candidate).each do |from, to, cost|
         new_cost = costs[candidate] + cost
@@ -78,11 +81,18 @@ def solve(initial)
 
         candidates << result
         costs[result] = new_cost
+        moves[result] = moves[candidate] + [[from, to]]
       end
     end
 
-    break if costs[@goal] && costs[@goal] < costs[checking[0]]
     break if candidates.empty?
+  end
+
+  print_board(initial)
+
+  moves[@goal].each_with_object(initial) do |move, board|
+    board.replace(perform_move(board, *move))
+    print_board(board)
   end
 
   puts "result: #{costs[@goal]}"

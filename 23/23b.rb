@@ -27,7 +27,7 @@ require_relative "shared"
   15 => [4, 16],
   16 => [15, 17],
   17 => [16, 18],
-  18 => [16],
+  18 => [17],
   19 => [6, 20],
   20 => [19, 21],
   21 => [20, 22],
@@ -40,6 +40,19 @@ require_relative "shared"
 
 @goal = [nil] * 11 + %w[A A A A B B B B C C C C D D D D]
 
+def print_board(board)
+  sq = proc { |i| board[i] || "." }
+
+  puts "#############"
+  puts "##{(0..10).map { |i| sq.call(i) }.join}#"
+  puts "####{sq.call(11)}##{sq.call(15)}##{sq.call(19)}##{sq.call(23)}###"
+  puts "  ##{sq.call(12)}##{sq.call(16)}##{sq.call(20)}##{sq.call(24)}#  "
+  puts "  ##{sq.call(13)}##{sq.call(17)}##{sq.call(21)}##{sq.call(25)}#  "
+  puts "  ##{sq.call(14)}##{sq.call(18)}##{sq.call(22)}##{sq.call(26)}#  "
+  puts "  #########"
+  puts
+end
+
 def legal_moves(board)
   moves =
     board
@@ -48,6 +61,12 @@ def legal_moves(board)
         next unless piece
 
         a, b, c, d = @goal.each_index.select { |i| @goal[i] == piece }.sort
+
+        next if from == d
+        next if from == c && board[d] == piece
+        next if from == b && board[c..d].all? { |s| s == piece }
+        next if from == a && board[b..d].all? { |s| s == piece }
+
         goals = []
         goals << a if board[a].nil? && board[b..d].all? { |s| s == piece }
         if board[a..b].all?(&:nil?) && board[c..d].all? { |s| s == piece }
@@ -69,7 +88,7 @@ def legal_moves(board)
   goal_moves.any? ? goal_moves : moves
 end
 
-# initial = [nil] * 11 + %w[A D D B D C B C B B A D C A C A] # input
-initial = [nil] * 11 + %w[B D D A C C B D B B A C D A C A] # sample
+initial = [nil] * 11 + %w[A D D B D C B C B B A D C A C A] # input
+# initial = [nil] * 11 + %w[B D D A C C B D B B A C D A C A] # sample
 
 solve(initial)

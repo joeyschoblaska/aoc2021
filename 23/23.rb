@@ -30,6 +30,17 @@ require_relative "shared"
 
 @goal = [nil] * 11 + %w[A A B B C C D D]
 
+def print_board(board)
+  sq = proc { |i| board[i] || "." }
+
+  puts "#############"
+  puts "##{(0..10).map { |i| sq.call(i) }.join}#"
+  puts "####{sq.call(11)}##{sq.call(13)}##{sq.call(15)}##{sq.call(17)}###"
+  puts "  ##{sq.call(12)}##{sq.call(14)}##{sq.call(16)}##{sq.call(18)}#  "
+  puts "  #########"
+  puts
+end
+
 def legal_moves(board)
   moves =
     board
@@ -57,6 +68,7 @@ def legal_moves(board)
   goal_move ? [goal_move] : moves
 end
 
-initial = [nil] * 11 + %w[A B D C B D C A]
+initial = [nil] * 11 + %w[A B D C B D C A] # input
+# initial = [nil] * 11 + %w[B A C D B C D A] # sample
 
 solve(initial)
