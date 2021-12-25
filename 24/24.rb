@@ -1,5 +1,4 @@
 require "set"
-require "pry"
 require "json"
 
 cache = {}
@@ -45,17 +44,18 @@ else
 
     (1..9).each do |n|
       p [i, n]
-      (0..1_000_000).each do |zin|
+      (-1_000_000..1_000_000).each do |zin|
         result = execute(instruction_sets[i], [n], 0, 0, 0, zin)
         zout = result[3]
         candidates[i] << [n, zin, zout] if ztargets.include?(zout)
       end
     end
 
-    raise "no candidates found" if candidates[i].empty?
+    if candidates[i].empty?
+      File.open("24/candidates.json", "w") { |f| f.puts candidates.to_json }
+      raise "no candidates found"
+    end
   end
 
   File.open("24/candidates.json", "w") { |f| f.puts candidates.to_json }
 end
-
-binding.pry
