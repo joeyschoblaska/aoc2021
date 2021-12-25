@@ -12,6 +12,7 @@ def print_grid(grid)
 end
 
 loop do
+  steps += 1
   stable = true
 
   east = Grid.new
@@ -54,8 +55,7 @@ loop do
 
   break if stable
 
-  steps += 1
   grid = south
 end
 
-p steps + 1
+p steps

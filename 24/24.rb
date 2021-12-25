@@ -1,9 +1,15 @@
-model = [0] * 14
-instructions = File.readlines("24/input.txt", chomp: true)
+require "set"
+require "pry"
+require "json"
 
-def execute(instructions, numbers)
-  w, x, y, z = 0, 0, 0, 0
+cache = {}
+instruction_sets = []
 
+File.foreach("24/input.txt", chomp: true) do |line|
+  line =~ /inp/ ? instruction_sets << [line] : instruction_sets[-1] << line
+end
+
+def execute(instructions, numbers, w = 0, x = 0, y = 0, z = 0)
   instructions.each do |instruction|
     command, a, b = instruction.split(/\s/)
 
@@ -26,13 +32,30 @@ def execute(instructions, numbers)
   [w, x, y, z]
 end
 
-model = 99_999_999_999_999 + 1
+candidates = {}
 
-loop do
-  model -= 1
-  numbers = model.to_s.chars.map(&:to_i)
-  next if numbers.any?(&:zero?)
-  result = execute(instructions, numbers)
-  p model
-  break if result[3] == 0
+if File.exists?("24/candidates.json")
+  candidates = JSON.parse(File.read("24/candidates.json"))
+else
+  (0..13).to_a.reverse.each do |i|
+    candidates[i] = []
+
+    ztargets =
+      i == 13 ? Set.new([0]) : Set.new(candidates[i + 1].map { |c| c[1] })
+
+    (1..9).each do |n|
+      p [i, n]
+      (0..1_000_000).each do |zin|
+        result = execute(instruction_sets[i], [n], 0, 0, 0, zin)
+        zout = result[3]
+        candidates[i] << [n, zin, zout] if ztargets.include?(zout)
+      end
+    end
+
+    raise "no candidates found" if candidates[i].empty?
+  end
+
+  File.open("24/candidates.json", "w") { |f| f.puts candidates.to_json }
 end
+
+binding.pry
