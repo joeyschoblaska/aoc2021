@@ -36,6 +36,10 @@ class Grid
     inspect
   end
 
+  def ==(other)
+    to_s == other.to_s
+  end
+
   def each_row
     (0..max_y).each { |y| yield (0..max_x).map { |x| self[x, y] } }
   end
