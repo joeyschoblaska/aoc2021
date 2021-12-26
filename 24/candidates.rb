@@ -15,7 +15,7 @@ else
 
     (1..9).each do |n|
       p [i, n]
-      (-1_000_000..1_000_000).each do |zin|
+      (0..1_000_000).each do |zin|
         result = execute(@instruction_sets[i], [n], 0, 0, 0, zin)
         zout = result[3]
         candidates[i] << [n, zin, zout] if ztargets.include?(zout)

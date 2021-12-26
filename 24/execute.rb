@@ -20,7 +20,7 @@ def execute(instructions, numbers, w = 0, x = 0, y = 0, z = 0)
     when "mod"
       eval "#{a} = #{a} % #{b}"
     when "eql"
-      "#{a} = #{a} == #{b} ? 1 : 0"
+      eval "#{a} = #{a} == #{b} ? 1 : 0"
     end
   end
 
