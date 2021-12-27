@@ -13,7 +13,19 @@ number = ""
   candidate = candidates[i.to_s].select { |c| c[1] == zout }.max_by { |c| c[0] }
 
   zout = candidate[2]
-  number << candidate[0]
+  number << candidate[0].to_s
 end
 
-p number
+puts "max: #{number}"
+
+zout = 0
+number = ""
+
+(0..13).each do |i|
+  candidate = candidates[i.to_s].select { |c| c[1] == zout }.min_by { |c| c[0] }
+
+  zout = candidate[2]
+  number << candidate[0].to_s
+end
+
+puts "min: #{number}"
